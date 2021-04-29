@@ -3,36 +3,34 @@ using System;
 
 namespace Core.Utilities.Interceptors
 {
-    //Bütün methodlar önce bu kurallardan geçecek
-    public abstract class MethodInterception : MethodInterceptionBaseAttribute//Sen bir attribute'sun
+    public abstract class MethodInterception : MethodInterceptionBaseAttribute
     {
-        //invocation çalıştırmak istediğimiz method -- business method
         protected virtual void OnBefore(IInvocation invocation) { }
         protected virtual void OnAfter(IInvocation invocation) { }
         protected virtual void OnException(IInvocation invocation, System.Exception e) { }
         protected virtual void OnSuccess(IInvocation invocation) { }
         public override void Intercept(IInvocation invocation)
-        {// try catch hata yakalama bloğu
+        {
             var isSuccess = true;
-            OnBefore(invocation); //invocation methodunun başında çalışır, methoddan önce
-            try //Çalıştırmayı dene
+            OnBefore(invocation); 
+            try 
             {
                 invocation.Proceed();
             }
-            catch (Exception e) //Hata alırsan bunu dene
+            catch (Exception e)
             {
                 isSuccess = false;
-                OnException(invocation, e); //invocation methodu hata aldığında çalışır
+                OnException(invocation, e); 
                 throw;
             }
             finally
             {
                 if (isSuccess)
                 {
-                    OnSuccess(invocation); //invocation methodu başarılı olduğunda çalışır
+                    OnSuccess(invocation);
                 }
             }
-            OnAfter(invocation); //invocation methodundan sonra çalışsın
+            OnAfter(invocation);
         }
     }
 }

@@ -16,21 +16,20 @@ namespace Business.BusinessAspects.Autofac
         private string[] _roles;
         private IHttpContextAccessor _httpContextAccessor;
 
-        public SecuredOperation(string roles)//Rolleri ver
+        public SecuredOperation(string roles)
         {
-            _roles = roles.Split(',');//Metni virgüle göre ayırıp arraya atar
+            _roles = roles.Split(',');
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-            //ServiceTool bizim injection altyapımızı aynen okumamıza yarayan araç
         }
 
         protected override void OnBefore(IInvocation invocation)
         {
-            var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();//Kullanıcının rollerini bul
-            foreach (var role in _roles)//Rolleri gez
+            var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
+            foreach (var role in _roles)
             {
-                if (roleClaims.Contains(role))//İlgili rol varsa
+                if (roleClaims.Contains(role))
                 {
-                    return;//Methodu çalıştırmaya devam et
+                    return;
                 }
             }
             throw new Exception(Messages.AuthorizationDenied);

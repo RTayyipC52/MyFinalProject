@@ -8,7 +8,7 @@ using System.Text;
 namespace Core.Extensions
 {
     public static class ClaimExtensions
-    {//this ICollection<Claim> claims demek bu method Claim'in içine eklenecek demek,extend etmek genişletmek
+    {
         public static void AddEmail(this ICollection<Claim> claims, string email)
         {
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, email));
@@ -27,6 +27,6 @@ namespace Core.Extensions
         public static void AddRoles(this ICollection<Claim> claims, string[] roles)
         {
             roles.ToList().ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
-        }//AddRoles bana gönderilen rolleri listeye çevir her birini dolaş ve Claim'e ekle diyor.
+        }
     }
 }

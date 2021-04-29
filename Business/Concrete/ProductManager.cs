@@ -22,7 +22,6 @@ namespace Business.Concrete
 { 
     public class ProductManager : IProductService
     {
-        //Dependency Injection -> Bir productDal'a ihtiyaç duyuyoruz gibi
         IProductDal _productDal;
         ICategoryService _categoryService;
 
@@ -31,9 +30,9 @@ namespace Business.Concrete
             _productDal = productDal;
             _categoryService = categoryService;
         }
-        //Attribute'lara tipler typeofla atanır
-        [SecuredOperation("product.add,admin")]//Yetkisi var mı
-        [ValidationAspect(typeof(ProductValidator))] //Add methodunu ProductValidator kullanarak doğrula
+
+        [SecuredOperation("product.add,admin")]
+        [ValidationAspect(typeof(ProductValidator))] 
         [CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product)
         {
@@ -41,14 +40,14 @@ namespace Business.Concrete
                 CheckIfProductCountOfCategoryCorrect(product.CategoryId),CheckIfCategoryLimitExceded());
             if (result!=null)
             {
-                return result;//Uymayan kural varsa onu döndürüyor
+                return result;
             }
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
 
         }
 
-        [CacheAspect]//key.value
+        [CacheAspect]
         public IDataResult<List<Product>> GetAll()
         {
             if (DateTime.Now.Hour==22)
@@ -60,12 +59,11 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetAllByCategoryId(int id)
         {
-            // Her p için p'nin CategoryId'si benim gönderdiğim Id'ye eşitse onları filtrele
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p=> p.CategoryId==id));
         }
 
         [CacheAspect]
-        [PerformanceAspect(5)]//Methodun çalışması 5 sn geçerse uyar sistem yavaş
+        [PerformanceAspect(5)]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
@@ -73,7 +71,6 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
         {
-            // iki fiyat aralığını filtreler
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p=> p.UnitPrice>=min && p.UnitPrice<=max));
         }
 
@@ -93,11 +90,9 @@ namespace Business.Concrete
             }
             throw new NotImplementedException();
         }
-        //business codes
+
         private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
         {
-            //Bir kategoride en fazla 10 ürün olabilir
-            //Select count(*) from products where categoryId=1
             var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count();
             if (result >= 10)
             {

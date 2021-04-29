@@ -38,16 +38,11 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //Autofac,CastleWindsor,StructureMap,Ninject,LightInject,DryInject --> IoC Container
-            //Autofac de instance yönetimini bizim için saðlayan yapýya sahip
             //Postsharp
             //AOP
             services.AddControllers();
-            //services.AddSingleton<IProductService, ProductManager>();
-            //services.AddSingleton<IProductDal, EfProductDal>();
-            //Üsttekiler instance yönetimi
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-            //Sistemde Authentication olarak JwtBearer Token kullanýlacak dediðimiz yer
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -74,7 +69,6 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            //MiddleWave Hangi yapýlarýn sýrasýyla devreye gireceðini belirliyoruz
             app.UseHttpsRedirection();
 
             app.UseRouting();

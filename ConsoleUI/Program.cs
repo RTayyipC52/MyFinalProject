@@ -6,7 +6,7 @@ using System;
 namespace ConsoleUI
 {
     //SOLID
-    //Open Closed Principle: Yaptığın yazılıma yeni bir özellik ekliyorsan mevcuttaki hiçbir koduna dokunamazsın.
+    //Open Closed Principle
     //DTO:Data Transformation Object 
     class Program
     {

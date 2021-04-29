@@ -12,7 +12,7 @@ namespace Core.Aspects.Autofac.Performance
     public class PerformanceAspect : MethodInterception
     {
         private int _interval;
-        private Stopwatch _stopwatch;//Timer method ne kadar sürecek
+        private Stopwatch _stopwatch;
 
         public PerformanceAspect(int interval)
         {
@@ -21,14 +21,14 @@ namespace Core.Aspects.Autofac.Performance
         }
 
 
-        protected override void OnBefore(IInvocation invocation)//Methodun önünde kronometreyi başlat
+        protected override void OnBefore(IInvocation invocation)
         {
             _stopwatch.Start();
         }
 
         protected override void OnAfter(IInvocation invocation)
         {
-            if (_stopwatch.Elapsed.TotalSeconds > _interval)//Method bittiğinde o ana kadar geçen süreyi hesapla
+            if (_stopwatch.Elapsed.TotalSeconds > _interval)
             {
                 Debug.WriteLine($"Performance : {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}-->{_stopwatch.Elapsed.TotalSeconds}");
             }

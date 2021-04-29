@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Core.Utilities.Security.JWT
-{//Token'ın değerleri
+{
     public class TokenOptions
     {
         public string Audience { get; set; }

@@ -15,12 +15,12 @@ namespace Core.Aspects.Autofac.Transaction
             {
                 try
                 {
-                    invocation.Proceed();//Methodun içini çalıştır
-                    transactionScope.Complete();//Başarılı tamamlar
+                    invocation.Proceed();
+                    transactionScope.Complete();
                 }
                 catch (System.Exception e)
                 {
-                    transactionScope.Dispose();//Hata olduğunda uyarır
+                    transactionScope.Dispose();
                     throw;
                 }
             }

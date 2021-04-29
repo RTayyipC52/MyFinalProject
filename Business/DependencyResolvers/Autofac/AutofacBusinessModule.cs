@@ -29,14 +29,13 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();//Çalışan uygulama içerisinde
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()//İmplemente edilmiş interfaceleri bul
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .EnableInterfaceInterceptors(new ProxyGenerationOptions()
                 {
-                    Selector = new AspectInterceptorSelector()//Onlar için AspectInterceptorSelector'ı çağır
+                    Selector = new AspectInterceptorSelector()
                 }).SingleInstance();
-            //Yani Autofac bizim bütün sınıflarımız için önce AspectInterceptorSelector' çalıştır bunu sınıfların Aspect'i[] var mı bak diyor
         }
     }
 }

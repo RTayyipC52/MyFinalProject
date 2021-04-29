@@ -11,7 +11,6 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
 {
     public class MemoryCacheManager : ICacheManager
     {
-        //Adapter Pattern:Var olan bir sistemi kendi sistemime uyarlıyorum
         IMemoryCache _memoryCache;
 
         public MemoryCacheManager()
@@ -20,7 +19,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
         }
 
         public void Add(string key, object value, int duration)
-        {//TimeSpan:Zaman aralığı, Bu ne kadar süre verirsek o kadar cache te kalacak
+        {
             _memoryCache.Set(key, value, TimeSpan.FromMinutes(duration));
         }
 
@@ -35,7 +34,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
         }
 
         public bool IsAdd(string key)
-        {//out _ : cache teki değeri döndürmüyoruz
+        {
             return _memoryCache.TryGetValue(key, out _);
         }
 
@@ -45,8 +44,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
         }
 
         public void RemoveByPattern(string pattern)
-        {//Çalışma anında bellekten silme
-            //Bellekteki EntriesCollectionı bul, definitionı _memorycache olanları bul, her bir cache elemanlarını gez
+        {
             var cacheEntriesCollectionDefinition = typeof(MemoryCache).GetProperty("EntriesCollection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var cacheEntriesCollection = cacheEntriesCollectionDefinition.GetValue(_memoryCache) as dynamic;
             List<ICacheEntry> cacheCollectionValues = new List<ICacheEntry>();
@@ -56,11 +54,10 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
                 ICacheEntry cacheItemValue = cacheItem.GetType().GetProperty("Value").GetValue(cacheItem, null);
                 cacheCollectionValues.Add(cacheItemValue);
             }
-            //Her bir cache keylerinden gönderdiğim değere uygun olanlar varsa onları keysToRemove içine at 
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var keysToRemove = cacheCollectionValues.Where(d => regex.IsMatch(d.Key.ToString())).Select(d => d.Key).ToList();
 
-            foreach (var key in keysToRemove)//Uyanların keylerini bulup sil
+            foreach (var key in keysToRemove)
             {
                 _memoryCache.Remove(key);
             }

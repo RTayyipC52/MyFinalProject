@@ -14,12 +14,11 @@ namespace Core.DataAccess.EntityFramework
     {
         public void Add(TEntity entity)
         {
-            //using içine yazılan nesneler using bitince garbege collector ile bellekten atılır
             using (TContext context = new TContext())
             {
-                var addedEntity = context.Entry(entity); // veri kaynağından referansı yakala 
-                addedEntity.State = EntityState.Added;   // eklenecek liste
-                context.SaveChanges();  // SaveChanges işlemi gerçekleştirir
+                var addedEntity = context.Entry(entity); 
+                addedEntity.State = EntityState.Added;  
+                context.SaveChanges();  
             }
         }
 
@@ -37,7 +36,6 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                // tabloyu liste gibi algılayıp SingleorDefault uyguluyor
                 return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
@@ -46,7 +44,6 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                //                   ? mı       filtre yoksa           : değil mi           filtre varsa
                 return filter == null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
             }
         }
